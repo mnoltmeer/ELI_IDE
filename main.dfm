@@ -21,7 +21,7 @@ object ELIExtIDEForm: TELIExtIDEForm
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 55
+    Left = 53
     Top = 287
     Width = 4
     Height = 13
@@ -80,19 +80,19 @@ object ELIExtIDEForm: TELIExtIDEForm
     OnChange = ParamsChange
   end
   object LineNum: TEdit
-    Left = 0
+    Left = 2
     Top = 284
     Width = 50
     Height = 21
-    Enabled = False
+    ReadOnly = True
     TabOrder = 3
   end
   object ColNum: TEdit
-    Left = 64
+    Left = 58
     Top = 284
     Width = 50
     Height = 21
-    Enabled = False
+    ReadOnly = True
     TabOrder = 4
   end
   object BtnPanel: TPanel

@@ -466,7 +466,7 @@ void __fastcall TELIExtIDEForm::AutoScaleUI()
 
   if (MenuShowLog->Checked)
 	{
-	  SetLog(0, ClientHeight - 200, ClientWidth - 17, 200);
+	  SetLog(0, ClientHeight - 205, ClientWidth - 20, 200);
 	  Log->Show();
 	  CountersTop = Log->Top - LineNum->ClientHeight - 8;
 	}
@@ -477,6 +477,8 @@ void __fastcall TELIExtIDEForm::AutoScaleUI()
 	  CountersTop = ClientHeight - LineNum->ClientHeight - 8;
 	}
 
+  LineNum->Left = Editor->Left;
+  ColNum->Left = LineNum->Left + LineNum->Width + 10;
   LineNum->Top = CountersTop;
   ColNum->Top = CountersTop;
   Label1->Top = CountersTop;
