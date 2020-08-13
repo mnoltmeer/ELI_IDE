@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{1E09BE39-60A7-4F80-8D41-19188B26CEF9}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="et.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\ELIExtIDE.cbproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="et">
+        <MSBuild Projects="et.cbproj"/>
+    </Target>
+    <Target Name="et:Clean">
+        <MSBuild Projects="et.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="et:Make">
+        <MSBuild Projects="et.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="ELIExtIDE">
+        <MSBuild Projects="..\ELIExtIDE.cbproj"/>
+    </Target>
+    <Target Name="ELIExtIDE:Clean">
+        <MSBuild Projects="..\ELIExtIDE.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ELIExtIDE:Make">
+        <MSBuild Projects="..\ELIExtIDE.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="et;ELIExtIDE"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="et:Clean;ELIExtIDE:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="et:Make;ELIExtIDE:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
