@@ -20,7 +20,7 @@ This file is part of ELI IDE.
 
 #pragma hdrstop
 
-#include "..\..\MyFunc\MyFunc.h"
+#include "..\work-functions\MyFunc.h"
 #include "ELICodeInsight.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)

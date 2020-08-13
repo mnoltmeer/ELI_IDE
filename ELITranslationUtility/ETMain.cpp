@@ -29,8 +29,8 @@ This file is part of ELI IDE.
 #include <string.h>
 
 #define BUILD_APP
-#include "..\..\..\ELI\eli_interface.h"
-#include "..\..\..\MyFunc\MyFunc.h"
+#include "..\ELI\eli_interface.h"
+#include "..\work-functions\MyFunc.h"
 
 HINSTANCE dllhandle;
 

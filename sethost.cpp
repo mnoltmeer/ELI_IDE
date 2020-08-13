@@ -3,7 +3,7 @@
 #include <vcl.h>
 #pragma hdrstop
 
-#include "..\..\MyFunc\MyFunc.h"
+#include "..\work-functions\MyFunc.h"
 #include "main.h"
 #include "sethost.h"
 //---------------------------------------------------------------------------

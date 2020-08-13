@@ -20,8 +20,8 @@ This file is part of ELI IDE.
 #include <vcl.h>
 #pragma hdrstop
 
-#include "..\..\MyFunc\MyFunc.h"
-#include "..\..\ELI\eli_interface.h"
+#include "..\work-functions\MyFunc.h"
+#include "..\ELI\eli_interface.h"
 #include "ELISourceHighlighter.h"
 #include "ELICodeInsight.h"
 #include "debug.h"
