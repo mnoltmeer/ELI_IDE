@@ -36,3 +36,5 @@ __history
 __recovery
 __history
 /ELITranslationUtility/*.res
+builds
+*.res
