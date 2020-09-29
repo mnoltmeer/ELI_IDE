@@ -104,7 +104,7 @@ object ELIExtIDEForm: TELIExtIDEForm
     TabOrder = 5
     Visible = False
     object BtNew: TBitBtn
-      Left = 0
+      Left = 2
       Top = 0
       Width = 25
       Height = 25
@@ -197,7 +197,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtNewClick
     end
     object BtOpen: TBitBtn
-      Left = 24
+      Left = 27
       Top = 0
       Width = 25
       Height = 25
@@ -290,7 +290,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtOpenClick
     end
     object BtSave: TBitBtn
-      Left = 48
+      Left = 52
       Top = 0
       Width = 25
       Height = 25
@@ -383,7 +383,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtSaveClick
     end
     object BtRun: TBitBtn
-      Left = 97
+      Left = 98
       Top = 0
       Width = 25
       Height = 25
@@ -476,7 +476,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtRunClick
     end
     object BtRunTo: TBitBtn
-      Left = 121
+      Left = 123
       Top = 0
       Width = 25
       Height = 25
@@ -662,7 +662,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtDebugClick
     end
     object BtVarStack: TBitBtn
-      Left = 227
+      Left = 229
       Top = 0
       Width = 25
       Height = 25
@@ -755,7 +755,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtVarStackClick
     end
     object BtObjStack: TBitBtn
-      Left = 250
+      Left = 254
       Top = 0
       Width = 25
       Height = 25
@@ -848,7 +848,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtObjStackClick
     end
     object BtClassStack: TBitBtn
-      Left = 273
+      Left = 279
       Top = 0
       Width = 25
       Height = 25
@@ -941,7 +941,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtClassStackClick
     end
     object BtParamStack: TBitBtn
-      Left = 296
+      Left = 303
       Top = 0
       Width = 25
       Height = 25
@@ -1034,7 +1034,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtParamStackClick
     end
     object BtFuncStack: TBitBtn
-      Left = 319
+      Left = 328
       Top = 0
       Width = 25
       Height = 25
@@ -1127,7 +1127,7 @@ object ELIExtIDEForm: TELIExtIDEForm
       OnClick = BtFuncStackClick
     end
     object BtBreak: TBitBtn
-      Left = 145
+      Left = 147
       Top = 0
       Width = 25
       Height = 25

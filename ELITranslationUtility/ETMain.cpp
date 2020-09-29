@@ -42,7 +42,7 @@ ELI_INTERFACE *eIface;
 bool debugging;
 int h_log, h_debug, h_varstack, h_objstack, h_clstack, h_prmstack, h_funcstack;
 wchar_t dll_path[4096], script_path[4096], params[4096];
-String app_dir;
+String LogPath;
 //---------------------------------------------------------------------------
 
 void SendStackContent(TStringList *stack, HWND h)
@@ -53,7 +53,7 @@ void SendStackContent(TStringList *stack, HWND h)
 	 }
   catch (Exception &e)
 	{
-	  SaveLog(app_dir + "\\exceptions.log", "et::SendStackContent():" + e.ToString());
+	  SaveLog(LogPath + "\\exceptions.log", "et::SendStackContent():" + e.ToString());
 	}
 }
 //---------------------------------------------------------------------------
@@ -100,7 +100,7 @@ void ExportStacks()
 	 }
   catch (Exception &e)
 	{
-	  SaveLog(app_dir + "\\exceptions.log", "et::ExportStacks():" + e.ToString());
+	  SaveLog(LogPath + "\\exceptions.log", "et::ExportStacks():" + e.ToString());
 	}
 }
 //---------------------------------------------------------------------------
@@ -121,7 +121,7 @@ void CreateTranslateLog()
 
 			if (h_debug)
 			  {
-				msg->LoadFromFile(app_dir + "\\translate.log", TEncoding::UTF8);
+				msg->LoadFromFile(LogPath + "\\translate.log", TEncoding::UTF8);
 				SendStackContent(msg, (HWND)h_debug);
 			  }
 		  }
@@ -129,7 +129,7 @@ void CreateTranslateLog()
 	 }
   catch (Exception &e)
 	{
-	  SaveLog(app_dir + "\\exceptions.log", "et::CreateTranslateLog():" + e.ToString());
+	  SaveLog(LogPath + "\\exceptions.log", "et::CreateTranslateLog():" + e.ToString());
 	}
 }
 //---------------------------------------------------------------------------
@@ -140,9 +140,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
   try
 	 {
-	   app_dir = Application->ExeName;
-	   int pos = app_dir.LastDelimiter("\\");
-	   app_dir.Delete(pos, app_dir.Length() - (pos - 1));
+	   LogPath = GetEnvironmentVariable("USERPROFILE") + "\\Documents";
 
 	   wcscpy(dll_path, argv[1]);
 	   wcscpy(script_path, argv[2]);
@@ -184,7 +182,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 		   if (debugging)
-			 SaveToFile(app_dir + "\\translate.log", "");
+			 SaveToFile(LogPath + "\\translate.log", "");
 
 		   const wchar_t *result;
 
@@ -214,7 +212,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(app_dir + "\\exceptions.log", "et::main(): Initialisation error " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "et::main(): Initialisation error " + e.ToString());
 	   res = -1;
 	 }
 

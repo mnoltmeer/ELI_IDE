@@ -8,8 +8,9 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
+
 TDebugOutputForm *DebugOutputForm;
-extern String ide_dir;
+
 //---------------------------------------------------------------------------
 __fastcall TDebugOutputForm::TDebugOutputForm(TComponent* Owner)
 	: TForm(Owner)

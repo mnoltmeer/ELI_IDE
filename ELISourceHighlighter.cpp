@@ -25,6 +25,8 @@ This file is part of ELI IDE.
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
+extern String LogPath;
+
 const wchar_t *VARSYM = L"$";
 const wchar_t *OBJSYM = L"&";
 const wchar_t *STRSYM = L"'";
@@ -32,7 +34,7 @@ const wchar_t *STRSYM = L"'";
 static std::vector<ExprColor> ExpColors;
 
 static std::vector<MarkedFragment> vecSelFragments; //вектор, куди додаються параметри фрагментів,
-											 //які треба розфарбувати
+													//які треба розфарбувати
 
 
 void InitExprColors(int theme_style)
@@ -150,7 +152,7 @@ int HighlightSource(TRichEdit *src, int line_ind)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog("exceptions.log", "ELISourceHighlighter::HighlightSource: " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::HighlightSource: " + e.ToString());
 	   res = -1;
      }
 
@@ -171,7 +173,7 @@ int HighlightSourceFull(TRichEdit *src)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog("exceptions.log", "ELISourceHighlighter::HighlightSourceFull: " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::HighlightSourceFull: " + e.ToString());
 	   res = -1;
 	 }
 
@@ -215,7 +217,7 @@ void MarkFragmentsInLine(TRichEdit *src, int line_ind)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog("exceptions.log", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -233,7 +235,7 @@ String CreateDummyString(int length)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog("exceptions.log", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
        res = "";
 	 }
 

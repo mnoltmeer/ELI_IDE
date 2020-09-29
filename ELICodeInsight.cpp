@@ -25,6 +25,8 @@ This file is part of ELI IDE.
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
+extern String LogPath;
+
 static std::vector<Lexeme> Lexems;
 
 void InitLexems()
@@ -408,7 +410,7 @@ int AddLexeme(const String &type, const String &sign,
   catch (Exception &e)
 	 {
 	   res = 0;
-	   SaveLog("exceptions.log", "ELICodeInsight::AddLexeme: " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "ELICodeInsight::AddLexeme: " + e.ToString());
 	 }
 
   return res;
@@ -434,7 +436,7 @@ std::vector<Lexeme> *GetResults(String fragment)
 	   if (res)
 		 delete res;
 
-	   SaveLog("exceptions.log", "ELICodeInsight::GetResults: " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "ELICodeInsight::GetResults: " + e.ToString());
 	 }
 
   return res;
@@ -459,7 +461,7 @@ Lexeme *GetLexeme(const String &sign)
   catch (Exception &e)
 	 {
        res = NULL;
-	   SaveLog("exceptions.log", "ELICodeInsight::GetLexeme: " + e.ToString());
+	   SaveLog(LogPath + "\\exceptions.log", "ELICodeInsight::GetLexeme: " + e.ToString());
 	 }
 
   return res;

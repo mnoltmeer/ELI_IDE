@@ -13,7 +13,7 @@
 TShowObjStackForm *ShowObjStackForm;
 
 extern ELI_INTERFACE *eIface;
-extern String ide_dir;
+
 //---------------------------------------------------------------------------
 __fastcall TShowObjStackForm::TShowObjStackForm(TComponent* Owner)
 	: TForm(Owner)

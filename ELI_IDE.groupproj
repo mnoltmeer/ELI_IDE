@@ -9,6 +9,9 @@
         <Projects Include="ELITranslationUtility\et.cbproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\ELI\ELI.cbproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="et:Make">
         <MSBuild Projects="ELITranslationUtility\et.cbproj" Targets="Make"/>
     </Target>
+    <Target Name="ELI">
+        <MSBuild Projects="..\ELI\ELI.cbproj"/>
+    </Target>
+    <Target Name="ELI:Clean">
+        <MSBuild Projects="..\ELI\ELI.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ELI:Make">
+        <MSBuild Projects="..\ELI\ELI.cbproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ELIIDE;et"/>
+        <CallTarget Targets="ELIIDE;et;ELI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ELIIDE:Clean;et:Clean"/>
+        <CallTarget Targets="ELIIDE:Clean;et:Clean;ELI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ELIIDE:Make;et:Make"/>
+        <CallTarget Targets="ELIIDE:Make;et:Make;ELI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
