@@ -38,3 +38,4 @@ __history
 /ELITranslationUtility/*.res
 builds
 *.res
+*.local
