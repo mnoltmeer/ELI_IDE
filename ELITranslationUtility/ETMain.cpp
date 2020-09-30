@@ -204,7 +204,6 @@ int _tmain(int argc, _TCHAR* argv[])
            else
 			 {
 			   MessageBox(NULL, L"Translate: OK", L"Result", MB_ICONINFORMATION | MB_OK);
-
 			   CreateTranslateLog();
 			   ExportStacks();
 			 }
