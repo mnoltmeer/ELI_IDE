@@ -1561,6 +1561,7 @@ void __fastcall TELIExtIDEForm::MenuSaveAsClick(TObject *Sender)
 	  changed = false;
 	  BtSave->Glyph = Images->GetBitmap(11, 20, 20);
 	  Editor->PlainText = false;
+	  cur_proj_path = SaveProject->FileName;
 	  Caption = "ELI IDE " + Version + " - " + CreateProjName(SaveProject->FileName);
 	}
 }
