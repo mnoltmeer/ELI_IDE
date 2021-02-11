@@ -25,8 +25,6 @@ This file is part of ELI IDE.
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
-extern String LogPath;
-
 const wchar_t *VARSYM = L"$";
 const wchar_t *OBJSYM = L"&";
 const wchar_t *STRSYM = L"'";
@@ -36,12 +34,13 @@ static std::vector<ExprColor> ExpColors;
 static std::vector<MarkedFragment> vecSelFragments; //вектор, куди додаються параметри фрагментів,
 													//які треба розфарбувати
 
+extern String UsedAppLogDir;
 
 void InitExprColors(int theme_style)
 {
   ExpColors.clear();
 
-  TColor HlDirect, HlExpr, HlVarSym, HlObjSym, HlComment, HlBrace, HlEndl;
+  TColor HlDirect, HlExpr, HlVarSym, HlObjSym, HlComment, HlBrace, HlEndl, HlFunc;
 
   if (theme_style == ESH_LIGHT_THEME) //світла тема
 	{
@@ -52,19 +51,21 @@ void InitExprColors(int theme_style)
 	  HlComment = clSkyBlue;
 	  HlBrace = clBlue;
 	  HlEndl =  clMaroon;
+	  HlFunc = clTeal;
 	}
   else //темна тема
 	{
 	  HlDirect = clLime;
-	  HlExpr = clAqua;
+	  HlExpr = clSkyBlue;
 	  HlVarSym = clYellow;
 	  HlObjSym = clFuchsia;
 	  HlComment = clSilver;
 	  HlBrace = clAqua;
 	  HlEndl =  clYellow;
+	  HlFunc = clSkyBlue;
 	}
 
-//directives
+//директиви
    ExpColors.push_back(ExprColor(L"#endl", HlDirect));
    ExpColors.push_back(ExprColor(L"#begin", HlDirect));
    ExpColors.push_back(ExprColor(L"#end", HlDirect));
@@ -92,8 +93,9 @@ void InitExprColors(int theme_style)
    ExpColors.push_back(ExprColor(L"#clstack", HlDirect));
    ExpColors.push_back(ExprColor(L"#procstack", HlDirect));
    ExpColors.push_back(ExprColor(L"#frgstack", HlDirect));
+   ExpColors.push_back(ExprColor(L"#protect", HlDirect));
 
-//words & expressions
+//зарезервовані слова та вирази
    ExpColors.push_back(ExprColor(L"if", HlExpr));
    ExpColors.push_back(ExprColor(L"else", HlExpr));
    ExpColors.push_back(ExprColor(L"for", HlExpr));
@@ -104,13 +106,49 @@ void InitExprColors(int theme_style)
    ExpColors.push_back(ExprColor(L"sym", HlExpr));
    ExpColors.push_back(ExprColor(L"num", HlExpr));
 
-//special symbols
+//спеціальні символи
    ExpColors.push_back(ExprColor(VARSYM, HlVarSym));
    ExpColors.push_back(ExprColor(OBJSYM, HlObjSym));
    ExpColors.push_back(ExprColor(L"//", HlComment));
    ExpColors.push_back(ExprColor(L"{", HlBrace));
    ExpColors.push_back(ExprColor(L"}", HlBrace));
    ExpColors.push_back(ExprColor(L";", HlEndl));
+
+//функції
+  AddFunctionHighlight(L"_Random", HlFunc);
+  AddFunctionHighlight(L"_Round", HlFunc);
+  AddFunctionHighlight(L"_Int", HlFunc);
+  AddFunctionHighlight(L"_StrLen", HlFunc);
+  AddFunctionHighlight(L"_StrEq", HlFunc);
+  AddFunctionHighlight(L"_IStrEq", HlFunc);
+  AddFunctionHighlight(L"_SubStr", HlFunc);
+  AddFunctionHighlight(L"_Return", HlFunc);
+  AddFunctionHighlight(L"_Throw", HlFunc);
+  AddFunctionHighlight(L"_Free", HlFunc);
+  AddFunctionHighlight(L"_LoadObjStack", HlFunc);
+  AddFunctionHighlight(L"_SaveObjStack", HlFunc);
+  AddFunctionHighlight(L"_SaveObjects", HlFunc);
+  AddFunctionHighlight(L"_Run", HlFunc);
+  AddFunctionHighlight(L"_GetParamAsNum", HlFunc);
+  AddFunctionHighlight(L"_GetParamAsStr", HlFunc);
+  AddFunctionHighlight(L"_SetParam", HlFunc);
+  AddFunctionHighlight(L"_LoadFileToVar", HlFunc);
+  AddFunctionHighlight(L"_SaveVarToFile", HlFunc);
+  AddFunctionHighlight(L"_SaveFragmentToFile", HlFunc);
+  AddFunctionHighlight(L"_GetConfig", HlFunc);
+  AddFunctionHighlight(L"_SaveState", HlFunc);
+  AddFunctionHighlight(L"_SaveVarStack", HlFunc);
+  AddFunctionHighlight(L"_WriteOut", HlFunc);
+  AddFunctionHighlight(L"_ReadIn", HlFunc);
+  AddFunctionHighlight(L"_System", HlFunc);
+  AddFunctionHighlight(L"_LastError", HlFunc);
+  AddFunctionHighlight(L"_ConnectLib", HlFunc);
+  AddFunctionHighlight(L"_FreeLib", HlFunc);
+  AddFunctionHighlight(L"_ImportFunc", HlFunc);
+  AddFunctionHighlight(L"_DebugIntoFile", HlFunc);
+  AddFunctionHighlight(L"_DebugIntoScreen", HlFunc);
+  AddFunctionHighlight(L"_StopDebug", HlFunc);
+  AddFunctionHighlight(L"_Sleep", HlFunc);
 }
 //---------------------------------------------------------------------------
 
@@ -152,7 +190,7 @@ int HighlightSource(TRichEdit *src, int line_ind)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::HighlightSource: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ELISourceHighlighter::HighlightSource: " + e.ToString());
 	   res = -1;
      }
 
@@ -173,7 +211,7 @@ int HighlightSourceFull(TRichEdit *src)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::HighlightSourceFull: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ELISourceHighlighter::HighlightSourceFull: " + e.ToString());
 	   res = -1;
 	 }
 
@@ -217,7 +255,7 @@ void MarkFragmentsInLine(TRichEdit *src, int line_ind)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -235,11 +273,19 @@ String CreateDummyString(int length)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ELISourceHighlighter::MarkFragmentsInLine: " + e.ToString());
        res = "";
 	 }
 
   return res;
+}
+//---------------------------------------------------------------------------
+
+void AddFunctionHighlight(const wchar_t *func_name, TColor highlight_color)
+{
+  ExpColors.push_back(ExprColor(func_name, highlight_color));
+  ExpColors.push_back(ExprColor(UpperCase(func_name).c_str(), highlight_color));
+  ExpColors.push_back(ExprColor(LowerCase(func_name).c_str(), highlight_color));
 }
 //---------------------------------------------------------------------------
 

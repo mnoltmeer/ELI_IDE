@@ -50,6 +50,7 @@ __published:	// IDE-managed Components
 	TButton *SelectFont;
 	TEdit *CurrentFontSize;
 	TEdit *CurrentFont;
+	TLabel *LbELIVersion;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall CancelSettingsClick(TObject *Sender);
 	void __fastcall SaveSettingsClick(TObject *Sender);

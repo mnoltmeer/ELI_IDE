@@ -23,6 +23,7 @@ This file is part of ELI IDE.
 
 #include "main.h"
 #include "ELISourceHighlighter.h"
+#include "..\ELI\eli_interface.h"
 #include "settings.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -37,6 +38,7 @@ extern bool SyntaxHighlight, CodeInsight, AutoCodeInsight;
 extern HINSTANCE dllhandle;
 extern int SpacesForTabs;
 extern int EliStatus;
+extern ELI_INTERFACE *eIface;
 //---------------------------------------------------------------------------
 __fastcall TIDESettings::TIDESettings(TComponent* Owner)
 	: TForm(Owner)
@@ -71,7 +73,10 @@ void __fastcall TIDESettings::CheckELIPath()
 		   else if (EliStatus < 0)
 			 ELIExtIDEForm->LockUIByELI(true);
 		   else
-             ELIExtIDEForm->LockUIByELI(false);
+			 {
+			   ELIExtIDEForm->LockUIByELI(false);
+			   LbELIVersion->Caption = eIface->GetVersion();
+             }
 		 }
 	 }
   catch (Exception &e)
@@ -93,7 +98,6 @@ void __fastcall TIDESettings::FormShow(TObject *Sender)
 	   AutoShowCodeInsight->Checked = AutoCodeInsight;
 	   CountSpacesForTabs->Text = IntToStr(SpacesForTabs);
 	   ELIPath->Text = InterpreterPath;
-	   CheckELIPath();
 	 }
   catch (Exception &e)
 	 {

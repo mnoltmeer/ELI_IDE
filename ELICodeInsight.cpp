@@ -25,9 +25,9 @@ This file is part of ELI IDE.
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
-extern String LogPath;
-
 static std::vector<Lexeme> Lexems;
+
+extern String UsedAppLogDir;
 
 void InitLexems()
 {
@@ -76,11 +76,6 @@ void InitLexems()
 			"_throw(sym pException)",
 			"end the translating and add a custom exception with arbitrary text to the log",
 			"_throw()");
-
-  AddLexeme("function",
-			"_LoadObjStack(sym pFilePath, num pClear)",
-			"loads a stack of objects from a file, returns 1 if successful, 0 otherwise. If pClear > 0 the stack of objects is cleared before loading from the file",
-			"_LoadObjStack(,)");
 
   AddLexeme("function",
 			"_free(sym pVarName)",
@@ -201,6 +196,11 @@ void InitLexems()
 			"_StopDebug()",
 			"disables logging of interpreter actions",
 			"_StopDebug()");
+
+  AddLexeme("function",
+			"_sleep(num pMsec))",
+			"paused translation for pMsec milliseconds",
+			"_sleep()");
 
 //директиви
   AddLexeme("directive",
@@ -330,9 +330,13 @@ void InitLexems()
 
   AddLexeme("directive",
 			"#endl",
-			"output the end of line character (carriage return). Used only as an argument to a function _WriteOut()",
+			"outputs the end-of-line character (carriage return). Used only as an argument to a function _WriteOut()",
 			"#endl");
 
+  AddLexeme("directive",
+			"#protect{<some code>}",
+			"translates code safely. When an error occurs, it writes message to log and continues the translation",
+			"#protect {}");
 
 //методи
   AddLexeme("object method",
@@ -410,7 +414,7 @@ int AddLexeme(const String &type, const String &sign,
   catch (Exception &e)
 	 {
 	   res = 0;
-	   SaveLog(LogPath + "\\exceptions.log", "ELICodeInsight::AddLexeme: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ELICodeInsight::AddLexeme: " + e.ToString());
 	 }
 
   return res;
@@ -436,7 +440,7 @@ std::vector<Lexeme> *GetResults(String fragment)
 	   if (res)
 		 delete res;
 
-	   SaveLog(LogPath + "\\exceptions.log", "ELICodeInsight::GetResults: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ELICodeInsight::GetResults: " + e.ToString());
 	 }
 
   return res;
@@ -461,7 +465,7 @@ Lexeme *GetLexeme(const String &sign)
   catch (Exception &e)
 	 {
        res = NULL;
-	   SaveLog(LogPath + "\\exceptions.log", "ELICodeInsight::GetLexeme: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ELICodeInsight::GetLexeme: " + e.ToString());
 	 }
 
   return res;

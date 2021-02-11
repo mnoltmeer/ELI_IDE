@@ -43,6 +43,8 @@ bool debugging;
 int h_log, h_debug, h_varstack, h_objstack, h_clstack, h_prmstack, h_funcstack;
 wchar_t dll_path[4096], script_path[4096], params[4096];
 String LogPath;
+extern String UsedAppLogDir;
+
 //---------------------------------------------------------------------------
 
 void SendStackContent(TStringList *stack, HWND h)
@@ -53,7 +55,7 @@ void SendStackContent(TStringList *stack, HWND h)
 	 }
   catch (Exception &e)
 	{
-	  SaveLog(LogPath + "\\exceptions.log", "et::SendStackContent():" + e.ToString());
+	  SaveLogToUserFolder("et.log", "ELI", "et::SendStackContent():" + e.ToString());
 	}
 }
 //---------------------------------------------------------------------------
@@ -100,7 +102,7 @@ void ExportStacks()
 	 }
   catch (Exception &e)
 	{
-	  SaveLog(LogPath + "\\exceptions.log", "et::ExportStacks():" + e.ToString());
+	  SaveLogToUserFolder("et.log", "ELI", "et::ExportStacks():" + e.ToString());
 	}
 }
 //---------------------------------------------------------------------------
@@ -129,7 +131,7 @@ void CreateTranslateLog()
 	 }
   catch (Exception &e)
 	{
-	  SaveLog(LogPath + "\\exceptions.log", "et::CreateTranslateLog():" + e.ToString());
+	  SaveLogToUserFolder("et.log", "ELI", "et::CreateTranslateLog():" + e.ToString());
 	}
 }
 //---------------------------------------------------------------------------
@@ -140,20 +142,63 @@ int _tmain(int argc, _TCHAR* argv[])
 
   try
 	 {
-	   LogPath = GetEnvironmentVariable("USERPROFILE") + "\\Documents";
+	   LogPath = GetEnvironmentVariable("USERPROFILE") + "\\Documents\\ELI";
+
+       UsedAppLogDir = "ELI";
+
+	   if (!DirectoryExists(LogPath))
+		 CreateDir(LogPath);
+
+	   if (argc <= 1)
+		 {
+		   std::wcout << "No params! Using:"
+					  << std::endl
+					  << "et.exe" << std::endl
+					  << "\t<dll path> " << std::endl
+					  << "\t<script path> " << std::endl
+					  << "\t<params> " << std::endl
+					  << "\t<debugging flag> " << std::endl
+					  << "\t<log window handle> " << std::endl
+					  << "\t<debug window handle> " << std::endl
+					  << "\t<var stack handle> " << std::endl
+					  << "\t<object stack handle> " << std::endl
+					  << "\t<class stack handle> " << std::endl
+					  << "\t<parameter stack handle> " << std::endl
+					  << "\t<function stack handle>" << std::endl
+					  << std::endl;
+
+		   return 0;
+		 }
 
 	   wcscpy(dll_path, argv[1]);
 	   wcscpy(script_path, argv[2]);
-	   wcscpy(params, argv[3]);
-	   debugging = StrToInt(argv[4]);
 
-	   h_log = StrToInt(argv[5]);
-	   h_debug = StrToInt(argv[6]);
-	   h_varstack = StrToInt(argv[7]);
-	   h_objstack = StrToInt(argv[8]);
-	   h_clstack = StrToInt(argv[9]);
-	   h_prmstack = StrToInt(argv[10]);
-	   h_funcstack = StrToInt(argv[11]);
+	   if (argc >= 4)
+		 wcscpy(params, argv[3]);
+
+	   if (argc >= 5)
+		 debugging = StrToInt(argv[4]);
+
+	   if (argc >= 6)
+		 h_log = StrToInt(argv[5]);
+
+	   if (argc >= 7)
+		 h_debug = StrToInt(argv[6]);
+
+	   if (argc >= 8)
+		 h_varstack = StrToInt(argv[7]);
+
+	   if (argc >= 9)
+		 h_objstack = StrToInt(argv[8]);
+
+	   if (argc >= 10)
+		 h_clstack = StrToInt(argv[9]);
+
+	   if (argc >= 11)
+		 h_prmstack = StrToInt(argv[10]);
+
+	   if (argc >= 12)
+		 h_funcstack = StrToInt(argv[11]);
 
 	   dllhandle = LoadLibrary(dll_path);
 
@@ -182,7 +227,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 		   if (debugging)
-			 SaveToFile(LogPath + "\\translate.log", "");
+			 SaveLogToUserFolder("translate.log", "ELI", "");
 
 		   const wchar_t *result;
 
@@ -198,12 +243,15 @@ int _tmain(int argc, _TCHAR* argv[])
            if (res == 0)
 			 {
 			   MessageBox(NULL, L"Translate: FAILED", L"Result", MB_ICONERROR | MB_OK);
-               CreateTranslateLog();
+			   std::wcout << std::endl << eIface->ShowInfoMessages();
+			   CreateTranslateLog();
 			   ExportStacks();
 			 }
            else
 			 {
-			   MessageBox(NULL, L"Translate: OK", L"Result", MB_ICONINFORMATION | MB_OK);
+			   String msg = "Translate: OK\r\nResult: " + String(result);
+			   MessageBox(NULL, msg.c_str(), L"Result", MB_ICONINFORMATION | MB_OK);
+               std::wcout << std::endl << eIface->ShowInfoMessages();
 			   CreateTranslateLog();
 			   ExportStacks();
 			 }
@@ -211,11 +259,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "et::main(): Initialisation error " + e.ToString());
+	   SaveLogToUserFolder("et.log", "ELI", "et::main(): Initialisation error " + e.ToString());
 	   res = -1;
 	 }
 
-  std::wcout << "Finishing with result: " << res << std::endl;
+  std::wcout << std::endl << "Finishing with result: " << res << std::endl;
 
   return res;
 }

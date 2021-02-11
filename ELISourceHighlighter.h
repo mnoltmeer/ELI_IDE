@@ -65,4 +65,5 @@ int HighlightSource(TRichEdit *src, int line_ind); //підсвічує синтаксис у поточ
 int HighlightSourceFull(TRichEdit *src); //підсвічує синтаксис у всьому тексті
 void MarkFragmentsInLine(TRichEdit *src, int line_ind);
 String CreateDummyString(int length);
+void AddFunctionHighlight(const wchar_t *func_name, TColor highlight_color);
 #endif

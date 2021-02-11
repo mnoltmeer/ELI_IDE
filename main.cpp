@@ -61,6 +61,8 @@ TStringList *LastFiles;
 TStringList *HostApplicationList;
 TMenuItem *MenuLastFiles[5];
 TPopupMenu *CodeInsightPopup;
+
+extern String UsedAppLogDir;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -88,7 +90,12 @@ __fastcall TELIExtIDEForm::TELIExtIDEForm(TComponent* Owner)
 
   Caption = "ELI IDE " + Version + " - <new>";
 
-  LogPath = GetEnvironmentVariable("USERPROFILE") + "\\Documents";
+  LogPath = GetEnvironmentVariable("USERPROFILE") + "\\Documents\\ELI";
+
+  if (!DirectoryExists(LogPath))
+	CreateDir(LogPath);
+
+  UsedAppLogDir = "ELI";
 
   ide_dir = Application->ExeName;
   int pos = ide_dir.LastDelimiter("\\");
@@ -152,7 +159,7 @@ void __fastcall TELIExtIDEForm::AddLastFile(String file)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "AddLastFile: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "AddLastFile: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -171,7 +178,7 @@ void __fastcall TELIExtIDEForm::ShowLastFiles()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ShowLastFiles: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ShowLastFiles: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -192,6 +199,9 @@ void __fastcall TELIExtIDEForm::CreateMenuLastFiles()
 int __fastcall TELIExtIDEForm::ConnectELI()
 {
   int res;
+
+  if (dllhandle)
+    ReleaseELI();
 
   if (!dllhandle)
 	{
@@ -302,7 +312,7 @@ void __fastcall TELIExtIDEForm::ChangeTheme(String name)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ChangeTheme: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ChangeTheme: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -358,7 +368,7 @@ void __fastcall TELIExtIDEForm::LockUIByELI(bool block)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "LockUIByELI: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "LockUIByELI: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -396,7 +406,7 @@ void __fastcall TELIExtIDEForm::PPLastFileClick(TObject *Sender)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "PPLastFileClick: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "PPLastFileClick: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -417,7 +427,7 @@ void __fastcall TELIExtIDEForm::PPCodeInsightMenuClick(TObject *Sender)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "PPCodeInsightMenuClick: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "PPCodeInsightMenuClick: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -623,7 +633,7 @@ void __fastcall TELIExtIDEForm::FormShow(TObject *Sender)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "FormShow: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "FormShow: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -652,7 +662,7 @@ void __fastcall TELIExtIDEForm::WriteLastFilesList()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "WriteLastFilesList: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "WriteLastFilesList: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -674,7 +684,7 @@ void __fastcall TELIExtIDEForm::ReadLastFilesList()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ReadLastFilesList: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ReadLastFilesList: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -837,7 +847,7 @@ void __fastcall TELIExtIDEForm::ReadSettings()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ReadSettings: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ReadSettings: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -910,7 +920,7 @@ void __fastcall TELIExtIDEForm::WriteSettings()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "WriteSettings: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "WriteSettings: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -950,7 +960,7 @@ void __fastcall TELIExtIDEForm::CreateCodeInsightMenu(String entity_name)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "CreateCodeInsightMenu: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "CreateCodeInsightMenu: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -963,7 +973,7 @@ void __fastcall TELIExtIDEForm::ClearCodeInsightMenu()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ClearCodeInsightMenu: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ClearCodeInsightMenu: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -980,7 +990,7 @@ void __fastcall TELIExtIDEForm::OpenCodeInsightMenu()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "OpenCodeInsightMenu: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "OpenCodeInsightMenu: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -1000,7 +1010,7 @@ String __fastcall TELIExtIDEForm::ExtractFragmentLexemeFromLine(int line_ind, in
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ExtractFragmentFromLine: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ExtractFragmentFromLine: " + e.ToString());
 	   res = "";
 	 }
 
@@ -1025,7 +1035,7 @@ String __fastcall TELIExtIDEForm::ReplaceFragmentLexemeInLine(const String &lexe
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ExtractFragmentFromLine: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ExtractFragmentFromLine: " + e.ToString());
 	   res = "";
 	 }
 
@@ -1067,7 +1077,7 @@ int __fastcall TELIExtIDEForm::FindLexemBorder(int line_ind, int cursor_pos)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "FindLexemBorder: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "FindLexemBorder: " + e.ToString());
 	   res = -1;
 	 }
 
@@ -1086,7 +1096,7 @@ void __fastcall TELIExtIDEForm::ActivateCodeInsight()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "ActivateCodeInsight: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "ActivateCodeInsight: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -1103,7 +1113,7 @@ void __fastcall TELIExtIDEForm::AddCloseBraces(String &text)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "AddCloseBraces: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "AddCloseBraces: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -1126,7 +1136,7 @@ int __fastcall TELIExtIDEForm::CountBraces(const String &text, wchar_t brace)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "CountBraces: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "CountBraces: " + e.ToString());
 	   cnt = 0;
 	 }
 
@@ -1178,7 +1188,7 @@ void __fastcall TELIExtIDEForm::Translate(String text, String params)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "Translate: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "Translate: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -1193,7 +1203,7 @@ void __fastcall TELIExtIDEForm::CancelHighlight()
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "CancelHiglight: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "CancelHiglight: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -1606,7 +1616,7 @@ void __fastcall TELIExtIDEForm::MenuTranslateClick(TObject *Sender)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "MenuTranslateClick: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "MenuTranslateClick: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -1629,7 +1639,7 @@ void __fastcall TELIExtIDEForm::MenuStopTranslateClick(TObject *Sender)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "MenuStopTranslateClick: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "MenuStopTranslateClick: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
@@ -1673,7 +1683,7 @@ void __fastcall TELIExtIDEForm::MenuTranslateToCursorClick(TObject *Sender)
 	 }
   catch (Exception &e)
 	 {
-	   SaveLog(LogPath + "\\exceptions.log", "MenuTranslateToCursorClick: " + e.ToString());
+	   SaveLogToUserFolder("IDE.log", "ELI", "MenuTranslateToCursorClick: " + e.ToString());
 	 }
 }
 //---------------------------------------------------------------------------
