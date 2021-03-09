@@ -564,7 +564,7 @@ void __fastcall TELIExtIDEForm::FormShow(TObject *Sender)
 		   cur_proj_path = ParamStr(1);
 		   Editor->Lines->LoadFromFile(cur_proj_path, TEncoding::UTF8);
 
-		   Caption = "ELI IDE " + Version + " - " + CreateProjName(OpenProject->FileName);
+		   Caption = "ELI IDE " + Version + " - " + CreateProjName(cur_proj_path);
 		   changed = false;
            BtSave->Glyph = Images->GetBitmap(11, 20, 20);
 
