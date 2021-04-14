@@ -43,7 +43,8 @@ extern ELI_INTERFACE *eIface;
 __fastcall TIDESettings::TIDESettings(TComponent* Owner)
 	: TForm(Owner)
 {
-  Owner = ELIExtIDEForm;
+  Left = ELIExtIDEForm->ClientWidth / 2 - ClientWidth / 2;
+  Top = ELIExtIDEForm->ClientHeight / 2 - ClientHeight / 2;
 }
 //---------------------------------------------------------------------------
 

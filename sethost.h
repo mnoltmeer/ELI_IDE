@@ -19,6 +19,8 @@ __published:	// IDE-managed Components
 	TComboBox *HostAppList;
 	TButton *SetHostApp;
 	TOpenDialog *OpenHostApp;
+	TLabel *Label1;
+	TLabel *Label2;
 	void __fastcall ApplyClick(TObject *Sender);
 	void __fastcall CancelClick(TObject *Sender);
 	void __fastcall SetHostAppClick(TObject *Sender);

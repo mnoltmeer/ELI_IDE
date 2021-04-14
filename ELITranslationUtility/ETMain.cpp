@@ -170,35 +170,114 @@ int _tmain(int argc, _TCHAR* argv[])
 		   return 0;
 		 }
 
-	   wcscpy(dll_path, argv[1]);
-	   wcscpy(script_path, argv[2]);
+	   try
+		  {
+			wcscpy(dll_path, argv[1]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <dll path>");
+		 }
 
-	   if (argc >= 4)
-		 wcscpy(params, argv[3]);
+	   try
+		  {
+			wcscpy(script_path, argv[2]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <script path>");
+		 }
 
-	   if (argc >= 5)
-		 debugging = StrToInt(argv[4]);
+       try
+		  {
+			if (argc >= 4)
+			  wcscpy(params, argv[3]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <params>");
+		 }
 
-	   if (argc >= 6)
-		 h_log = StrToInt(argv[5]);
+       try
+		  {
+			if (argc >= 5)
+			  debugging = StrToInt(argv[4]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <debugging flag>");
+		 }
 
-	   if (argc >= 7)
-		 h_debug = StrToInt(argv[6]);
+       try
+		  {
+			if (argc >= 6)
+			  h_log = StrToInt(argv[5]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <log window handle>");
+		 }
 
-	   if (argc >= 8)
-		 h_varstack = StrToInt(argv[7]);
+       try
+		  {
+			if (argc >= 7)
+			  h_debug = StrToInt(argv[6]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <debug window handle>");
+		 }
 
-	   if (argc >= 9)
-		 h_objstack = StrToInt(argv[8]);
+       try
+		  {
+			if (argc >= 8)
+			  h_varstack = StrToInt(argv[7]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <var stack handle>");
+		 }
 
-	   if (argc >= 10)
-		 h_clstack = StrToInt(argv[9]);
+       try
+		  {
+			if (argc >= 9)
+			  h_objstack = StrToInt(argv[8]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <object stack handle>");
+		 }
 
-	   if (argc >= 11)
-		 h_prmstack = StrToInt(argv[10]);
+	   try
+		  {
+			if (argc >= 10)
+			  h_clstack = StrToInt(argv[9]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <class stack handle>");
+		 }
 
-	   if (argc >= 12)
-		 h_funcstack = StrToInt(argv[11]);
+
+       try
+		  {
+			if (argc >= 11)
+			  h_prmstack = StrToInt(argv[10]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <parameter stack handle>");
+		 }
+
+       try
+		  {
+			if (argc >= 12)
+			  h_funcstack = StrToInt(argv[11]);
+		  }
+	   catch (Exception &e)
+		 {
+		   throw new Exception("Can't initialise <function stack handle>");
+		 }
 
 	   dllhandle = LoadLibrary(dll_path);
 
@@ -233,7 +312,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		   std::wcout << "Translating..." << std::endl << std::endl;
 
-		   result = eIface->RunScriptFromFile(script_path, params, debugging);
+		   if (wcscmp(params, L"<none>") == 0)
+			 result = eIface->RunScriptFromFile(script_path, L"", debugging);
+		   else
+             result = eIface->RunScriptFromFile(script_path, params, debugging);
 
 		   if (_wcsicmp(result, L"-err-") == 0)
 			 res = 0;
@@ -259,7 +341,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	 }
   catch (Exception &e)
 	 {
-	   SaveLogToUserFolder("et.log", "ELI", "et::main(): Initialisation error " + e.ToString());
+	   SaveLogToUserFolder("et.log", "ELI", "et::main(): Initialisation error: " + e.ToString());
 	   res = -1;
 	 }
 

@@ -15,8 +15,8 @@ TDebugOutputForm *DebugOutputForm;
 __fastcall TDebugOutputForm::TDebugOutputForm(TComponent* Owner)
 	: TForm(Owner)
 {
-  Owner = ELIExtIDEForm;
-  Parent = ELIExtIDEForm;
+  Left = ELIExtIDEForm->ClientWidth / 2 - ClientWidth / 2;
+  Top = ELIExtIDEForm->ClientHeight / 2 - ClientHeight / 2;
 }
 //---------------------------------------------------------------------------
 

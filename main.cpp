@@ -102,7 +102,7 @@ __fastcall TELIExtIDEForm::TELIExtIDEForm(TComponent* Owner)
   ide_dir.Delete(pos, ide_dir.Length() - (pos - 1));
 
   ReadSettings();
-  HostApplication = "<none>";
+  HostApplication = "<default>";
   CreateMenuLastFiles();
   InitLexems();
   ChangeTheme(Theme);
@@ -836,9 +836,14 @@ void __fastcall TELIExtIDEForm::ReadSettings()
 				  MenuDebugTranslate->Checked = false;
 
 				if (reg->ValueExists("HostApplicationList"))
-				  StrToList(HostApplicationList, reg->ReadString("HostApplicationList"), ";");
+				  {
+					String app_list = reg->ReadString("HostApplicationList");
+
+					if (app_list != "")
+					  StrToList(HostApplicationList, app_list, ";");
+                  }
                 else
-				  reg->WriteString("HostApplicationList", "<none>");
+				  reg->WriteString("HostApplicationList", "<default>");
 
 				reg->CloseKey();
 			  }
@@ -909,9 +914,12 @@ void __fastcall TELIExtIDEForm::WriteSettings()
 				reg->WriteBool("ShowFuncStackAfterTranslate", MenuShowFuncStack->Checked);
 				reg->WriteBool("DebugTranslate", MenuDebugTranslate->Checked);
 
-                String list = ListToStr(HostApplicationList, ";");
+				String list = ListToStr(HostApplicationList, ";");
 
-				reg->WriteString("HostApplicationList", list);
+				if (list != "")
+				  reg->WriteString("HostApplicationList", list);
+				else
+                  reg->WriteString("HostApplicationList", "<default>");
 
 				reg->CloseKey();
 			  }
@@ -1150,10 +1158,13 @@ void __fastcall TELIExtIDEForm::Translate(String text, String params)
 	 {
 	   SaveToFile(LogPath + "\\prepared.es", text);
 
-	   if (HostApplication != "<none>")
+       if (params == "")
+		 params = "<none>";
+
+	   if (HostApplication != "<default>")
 		 {
-           String prm = InterpreterPath + " " +
-						LogPath + "\\prepared.es " +
+		   String prm = "\"" + InterpreterPath + "\" \"" +
+						LogPath + "\\prepared.es\" " +
 						"\"" + params + "\" " +
 						String((int)MenuDebugTranslate->Checked);
 
@@ -1166,8 +1177,8 @@ void __fastcall TELIExtIDEForm::Translate(String text, String params)
 		 }
 	   else
 		 {
-           String prm = InterpreterPath + " " +
-						LogPath + "\\prepared.es " +
+		   String prm = "\"" + InterpreterPath + "\" \"" +
+						LogPath + "\\prepared.es\" " +
 						"\"" + params + "\" " +
 						String((int)MenuDebugTranslate->Checked) + " " +
 						String((int)Log->Handle) + " " +
@@ -1427,6 +1438,14 @@ void __fastcall TELIExtIDEForm::EditorKeyPress(TObject *Sender, System::WideChar
 	  case 15: //ctrl+o
 		{
 		  MenuLoad->Click();
+		  break;
+		}
+
+	  case 22: //ctrl+v
+		{
+		  if (SyntaxHighlight)
+			SendMessage(Editor->Handle, WM_KEYUP, 0, NULL);
+
 		  break;
 		}
 

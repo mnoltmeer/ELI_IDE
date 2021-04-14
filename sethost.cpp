@@ -18,9 +18,11 @@ extern TStringList *HostApplicationList;
 __fastcall TSetHostAppForm::TSetHostAppForm(TComponent* Owner)
 	: TForm(Owner)
 {
-  Owner = ELIExtIDEForm;
+  Left = ELIExtIDEForm->ClientWidth / 2 - ClientWidth / 2;
+  Top = ELIExtIDEForm->ClientHeight / 2 - ClientHeight / 2;
+
   HostAppList->Items->Clear();
-  HostAppList->Items->Add("<none>");
+  HostAppList->Items->Add("<default>");
   HostAppList->Items->AddStrings(HostApplicationList);
   HostAppList->ItemIndex = 0;
 }
@@ -34,11 +36,13 @@ void __fastcall TSetHostAppForm::ApplyClick(TObject *Sender)
   Close();
 }
 //---------------------------------------------------------------------------
+
 void __fastcall TSetHostAppForm::CancelClick(TObject *Sender)
 {
   Close();
 }
 //---------------------------------------------------------------------------
+
 void __fastcall TSetHostAppForm::SetHostAppClick(TObject *Sender)
 {
   OpenHostApp->FileName = "";

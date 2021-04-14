@@ -4,8 +4,8 @@ object SetHostAppForm: TSetHostAppForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Set Host Application'
-  ClientHeight = 59
-  ClientWidth = 545
+  ClientHeight = 75
+  ClientWidth = 553
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,12 +13,26 @@ object SetHostAppForm: TSetHostAppForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poOwnerFormCenter
+  Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 8
+    Top = 37
+    Width = 228
+    Height = 13
+    Caption = 'Note: host application must accept args list like:'
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 56
+    Width = 306
+    Height = 13
+    Caption = '<ELI library path> <script path> <param list> <debug option>'
+  end
   object Cancel: TBitBtn
-    Left = 461
-    Top = 31
+    Left = 467
+    Top = 42
     Width = 76
     Height = 25
     Kind = bkCancel
@@ -27,8 +41,8 @@ object SetHostAppForm: TSetHostAppForm
     OnClick = CancelClick
   end
   object Apply: TBitBtn
-    Left = 380
-    Top = 31
+    Left = 386
+    Top = 42
     Width = 76
     Height = 25
     Kind = bkOK
@@ -37,15 +51,15 @@ object SetHostAppForm: TSetHostAppForm
     OnClick = ApplyClick
   end
   object HostAppList: TComboBox
-    Left = 2
-    Top = 4
+    Left = 8
+    Top = 8
     Width = 489
     Height = 21
     TabOrder = 2
   end
   object SetHostApp: TButton
-    Left = 497
-    Top = 2
+    Left = 503
+    Top = 6
     Width = 40
     Height = 25
     Caption = '...'
@@ -55,7 +69,7 @@ object SetHostAppForm: TSetHostAppForm
   object OpenHostApp: TOpenDialog
     DefaultExt = 'exe'
     Filter = 'executable fles|*.exe'
-    Left = 24
+    Left = 368
     Top = 8
   end
 end
