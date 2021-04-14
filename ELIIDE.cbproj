@@ -6,7 +6,7 @@
         <AppType>Application</AppType>
         <MainSource>ELIIDE.cpp</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
     </PropertyGroup>
@@ -119,9 +119,9 @@
         <UsePackages>false</UsePackages>
         <DynamicRTL>false</DynamicRTL>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=IDE main application;FileVersion=1.0.0.3;InternalName=;LegalCopyright=2019-2020 Maxim Noltmeer m.noltmeer@gmail.com;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=ELI IDE;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=IDE main application;FileVersion=1.0.0.4;InternalName=;LegalCopyright=2019-2020 Maxim Noltmeer m.noltmeer@gmail.com;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=ELI IDE;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <Icon_MainIcon>ELIExtIDE_Icon.ico</Icon_MainIcon>
-        <VerInfo_Build>3</VerInfo_Build>
+        <VerInfo_Build>4</VerInfo_Build>
         <UWP_CppLogo44>icos\logo.png</UWP_CppLogo44>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <UWP_CppLogo150>icos\logo.png</UWP_CppLogo150>
@@ -147,10 +147,6 @@
             <DependentOn>ELICodeInsight.h</DependentOn>
             <BuildOrder>10</BuildOrder>
         </CppCompile>
-        <PCHCompile Include="ELIExtIDEPCH1.h">
-            <BuildOrder>1</BuildOrder>
-            <PCH>true</PCH>
-        </PCHCompile>
         <CppCompile Include="ELIIDE.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>

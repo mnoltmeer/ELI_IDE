@@ -22,7 +22,6 @@ __fastcall TSetHostAppForm::TSetHostAppForm(TComponent* Owner)
   Top = ELIExtIDEForm->ClientHeight / 2 - ClientHeight / 2;
 
   HostAppList->Items->Clear();
-  HostAppList->Items->Add("<default>");
   HostAppList->Items->AddStrings(HostApplicationList);
   HostAppList->ItemIndex = 0;
 }

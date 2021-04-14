@@ -841,6 +841,8 @@ void __fastcall TELIExtIDEForm::ReadSettings()
 
 					if (app_list != "")
 					  StrToList(HostApplicationList, app_list, ";");
+					else
+                      HostApplicationList->Add("<default>");
                   }
                 else
 				  reg->WriteString("HostApplicationList", "<default>");
