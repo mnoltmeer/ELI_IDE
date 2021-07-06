@@ -1,5 +1,5 @@
 /*!
-Copyright 2019-2020 Maxim Noltmeer (m.noltmeer@gmail.com)
+Copyright 2019-2021 Maxim Noltmeer (m.noltmeer@gmail.com)
 
 This file is part of ELI IDE.
 

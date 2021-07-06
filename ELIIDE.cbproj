@@ -204,9 +204,9 @@
         <FormResources Include="sethost.dfm"/>
         <FormResources Include="paramstack.dfm"/>
         <FormResources Include="objstack.dfm"/>
-        <FormResources Include="main.dfm"/>
-        <FormResources Include="varstack.dfm"/>
         <FormResources Include="settings.dfm"/>
+        <FormResources Include="varstack.dfm"/>
+        <FormResources Include="main.dfm"/>
         <FormResources Include="debug.dfm"/>
         <FormResources Include="classstack.dfm"/>
         <FormResources Include="functionstack.dfm"/>

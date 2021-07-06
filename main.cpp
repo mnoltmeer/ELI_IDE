@@ -1,5 +1,5 @@
 /*!
-Copyright 2019-2020 Maxim Noltmeer (m.noltmeer@gmail.com)
+Copyright 2019-2021 Maxim Noltmeer (m.noltmeer@gmail.com)
 
 This file is part of ELI IDE.
 
@@ -1419,7 +1419,27 @@ void __fastcall TELIExtIDEForm::EditorKeyUp(TObject *Sender, WORD &Key, TShiftSt
 		{
 		  LockWindowUpdate(Editor->Handle);
 		  HighlightSource(Editor, Editor->CaretPos.Y);
-          LockWindowUpdate(NULL);
+		  LockWindowUpdate(NULL);
+		}
+	}
+
+  if (!(Shift.Contains(ssShift) || (Key == 51) || //'#'
+								   (Key == 52) || //'$'
+                                   (Key == 55) || //'&'
+								   (Key == 56) || //'*'
+                                   (Key == 59) || //':'
+								   (Key == 57) || //'('
+								   (Key == 49) || //')'
+								   (Key == 91) || //'{'
+								   (Key == 93) || //'}'
+                                   (Key == 46) || //'?'
+								   (Key == 61)))  //'+'
+	{
+	  if (SyntaxHighlight)
+		{
+		  LockWindowUpdate(Editor->Handle);
+		  HighlightSource(Editor, Editor->CaretPos.Y);
+		  LockWindowUpdate(NULL);
 		}
 	}
 }
