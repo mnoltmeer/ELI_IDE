@@ -29,15 +29,8 @@ This file is part of ELI IDE.
 #include <string.h>
 
 #define BUILD_APP
-#include "..\ELI\eli_interface.h"
+#include "..\ELI\eli_script.h"
 #include "..\work-functions\MyFunc.h"
-
-HINSTANCE dllhandle;
-
-GETELIINTERFACE GetELI;
-FREEELIINTERFACE FreeELI;
-
-ELI_INTERFACE *eIface;
 
 bool debugging;
 int h_log, h_debug, h_varstack, h_objstack, h_clstack, h_prmstack, h_funcstack;
@@ -60,45 +53,41 @@ void SendStackContent(TStringList *stack, HWND h)
 }
 //---------------------------------------------------------------------------
 
-void ExportStacks()
+void ExportStacks(ELI_INTERFACE *iface)
 {
   try
 	 {
-	   TStringList *msg = new TStringList();
+	   std::unique_ptr<TStringList> msg(new TStringList());
 
-	   try
-		  {
-			if (h_varstack)
-			  {
-				StrToList(msg, eIface->ShowVarStack());
-				SendStackContent(msg, (HWND)h_varstack);
-			  }
+	   if (h_varstack)
+		 {
+		   StrToList(msg.get(), iface->ShowVarStack());
+		   SendStackContent(msg.get(), (HWND)h_varstack);
+		 }
 
-			if (h_objstack)
-			  {
-				StrToList(msg, eIface->ShowObjStack());
-				SendStackContent(msg, (HWND)h_objstack);
-			  }
+	   if (h_objstack)
+		 {
+		   StrToList(msg.get(), iface->ShowObjStack());
+		   SendStackContent(msg.get(), (HWND)h_objstack);
+		 }
 
-			if (h_clstack)
-			  {
-				StrToList(msg, eIface->ShowClassStack());
-				SendStackContent(msg, (HWND)h_clstack);
-			  }
+	   if (h_clstack)
+		 {
+		   StrToList(msg.get(), iface->ShowClassStack());
+		   SendStackContent(msg.get(), (HWND)h_clstack);
+		 }
 
-			if (h_prmstack)
-			  {
-				StrToList(msg, eIface->ShowParamStack());
-				SendStackContent(msg, (HWND)h_prmstack);
-			  }
+	   if (h_prmstack)
+		 {
+		   StrToList(msg.get(), iface->ShowParamStack());
+		   SendStackContent(msg.get(), (HWND)h_prmstack);
+		 }
 
-			if (h_funcstack)
-			  {
-				StrToList(msg, eIface->ShowFuncStack());
-				SendStackContent(msg, (HWND)h_funcstack);
-			  }
-		  }
-	   __finally {delete msg;}
+	   if (h_funcstack)
+		 {
+		   StrToList(msg.get(), iface->ShowFuncStack());
+		   SendStackContent(msg.get(), (HWND)h_funcstack);
+		 }
 	 }
   catch (Exception &e)
 	{
@@ -107,27 +96,23 @@ void ExportStacks()
 }
 //---------------------------------------------------------------------------
 
-void CreateTranslateLog()
+void CreateTranslateLog(ELI_INTERFACE *iface)
 {
   try
 	 {
-	   TStringList *msg = new TStringList();
+	   std::unique_ptr<TStringList> msg(new TStringList());
 
-	   try
-		  {
-			if (h_log)
-			  {
-				StrToList(msg, eIface->ShowInfoMessages());
-				SendStackContent(msg, (HWND)h_log);
-			  }
+	   if (h_log)
+		 {
+		   StrToList(msg.get(), iface->ShowInfoMessages());
+		   SendStackContent(msg.get(), (HWND)h_log);
+		 }
 
-			if (h_debug)
-			  {
-				msg->LoadFromFile(LogPath + "\\translate.log", TEncoding::UTF8);
-				SendStackContent(msg, (HWND)h_debug);
-			  }
-		  }
-	   __finally {delete msg;}
+	   if (h_debug)
+		 {
+		   msg->LoadFromFile(LogPath + "\\translate.log", TEncoding::UTF8);
+		   SendStackContent(msg.get(), (HWND)h_debug);
+		 }
 	 }
   catch (Exception &e)
 	{
@@ -160,11 +145,11 @@ int _tmain(int argc, _TCHAR* argv[])
 					  << "\t<debugging flag> " << std::endl
 					  << "\t<log window handle> " << std::endl
 					  << "\t<debug window handle> " << std::endl
-					  << "\t<var stack handle> " << std::endl
-					  << "\t<object stack handle> " << std::endl
-					  << "\t<class stack handle> " << std::endl
-					  << "\t<parameter stack handle> " << std::endl
-					  << "\t<function stack handle>" << std::endl
+					  << "\t<var stack window handle> " << std::endl
+					  << "\t<object stack window handle> " << std::endl
+					  << "\t<class stack window handle> " << std::endl
+					  << "\t<parameter stack window handle> " << std::endl
+					  << "\t<function stack window handle>" << std::endl
 					  << std::endl;
 
 		   return 0;
@@ -176,7 +161,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <dll path>");
+		   throw Exception("Can't initialise <dll path>");
 		 }
 
 	   try
@@ -185,7 +170,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <script path>");
+		   throw Exception("Can't initialise <script path>");
 		 }
 
        try
@@ -195,7 +180,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <params>");
+		   throw Exception("Can't initialise <params>");
 		 }
 
        try
@@ -205,7 +190,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <debugging flag>");
+		   throw Exception("Can't initialise <debugging flag>");
 		 }
 
        try
@@ -215,7 +200,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <log window handle>");
+		   throw Exception("Can't initialise <log window handle>");
 		 }
 
        try
@@ -225,7 +210,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <debug window handle>");
+		   throw Exception("Can't initialise <debug window handle>");
 		 }
 
        try
@@ -235,7 +220,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <var stack handle>");
+		   throw Exception("Can't initialise <var stack window handle>");
 		 }
 
        try
@@ -245,7 +230,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <object stack handle>");
+		   throw Exception("Can't initialise <object stack window handle>");
 		 }
 
 	   try
@@ -255,7 +240,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <class stack handle>");
+		   throw Exception("Can't initialise <class stack window handle>");
 		 }
 
 
@@ -266,77 +251,52 @@ int _tmain(int argc, _TCHAR* argv[])
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <parameter stack handle>");
+		   throw Exception("Can't initialise <parameter stack window handle>");
 		 }
 
-       try
+	   try
 		  {
 			if (argc >= 12)
 			  h_funcstack = StrToInt(argv[11]);
 		  }
 	   catch (Exception &e)
 		 {
-		   throw new Exception("Can't initialise <function stack handle>");
+		   throw Exception("Can't initialise <function stack window handle>");
 		 }
 
-	   dllhandle = LoadLibrary(dll_path);
+	   std::unique_ptr<ELIScript> script(new ELIScript(dll_path));
 
-	   if (NULL == dllhandle)
-		 throw new Exception("No DLL!");
+       std::wcout << std::endl
+				  << "[Interpreter version: "
+				  << script->Interpreter->GetVersion()
+				  << "]"
+				  << std::endl
+				  << std::endl;
+
+	   script->LoadFromFile(script_path);
+	   script->Params = params;
+	   script->SaveLogInFile = debugging;
+
+       const wchar_t *result;
+
+	   std::wcout << "Translating..." << std::endl << std::endl;
+
+	   res = script->Run();
+
+	   if (res == 0)
+		 {
+		   MessageBox(NULL, L"Translate: FAILED", L"Result", MB_ICONERROR | MB_OK);
+		   std::wcout << std::endl << script->Log.c_str();
+		   CreateTranslateLog(script->Interpreter);
+		   ExportStacks(script->Interpreter);
+		 }
 	   else
 		 {
-		   GetELI = (GETELIINTERFACE) GetProcAddress(dllhandle, "GetELIInterface");
-		   FreeELI = (FREEELIINTERFACE) GetProcAddress(dllhandle, "FreeELIInterface");
-
-		   if (!GetELI)
-			 throw new Exception("Error GetELI");
-
-		   if (!FreeELI)
-			 throw new Exception("Error FreeELI");
-
-		   if (GetELI(&eIface) == 0)
-			 throw new Exception("Error interface ELI_INTERFACE");
-
-		   std::wcout << std::endl
-					 << "[Interpreter version: "
-					 << String(eIface->GetVersion()).c_str()
-					 << "]"
-					 << std::endl
-					 << std::endl;
-
-
-		   if (debugging)
-			 SaveLogToUserFolder("translate.log", "ELI", "");
-
-		   const wchar_t *result;
-
-		   std::wcout << "Translating..." << std::endl << std::endl;
-
-		   if (wcscmp(params, L"<none>") == 0)
-			 result = eIface->RunScriptFromFile(script_path, L"", debugging);
-		   else
-             result = eIface->RunScriptFromFile(script_path, params, debugging);
-
-		   if (_wcsicmp(result, L"-err-") == 0)
-			 res = 0;
-		   else
-			 res = 1;
-
-           if (res == 0)
-			 {
-			   MessageBox(NULL, L"Translate: FAILED", L"Result", MB_ICONERROR | MB_OK);
-			   std::wcout << std::endl << eIface->ShowInfoMessages();
-			   CreateTranslateLog();
-			   ExportStacks();
-			 }
-           else
-			 {
-			   String msg = "Translate: OK\r\nResult: " + String(result);
-			   MessageBox(NULL, msg.c_str(), L"Result", MB_ICONINFORMATION | MB_OK);
-               std::wcout << std::endl << eIface->ShowInfoMessages();
-			   CreateTranslateLog();
-			   ExportStacks();
-			 }
+		   String msg = "Translate: OK\r\nResult: " + String(result);
+		   MessageBox(NULL, msg.c_str(), L"Result", MB_ICONINFORMATION | MB_OK);
+		   std::wcout << std::endl << script->Log.c_str();
+		   CreateTranslateLog(script->Interpreter);
+		   ExportStacks(script->Interpreter);
          }
 	 }
   catch (Exception &e)

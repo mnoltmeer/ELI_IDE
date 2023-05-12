@@ -29,9 +29,9 @@ wchar_t EndSymb[] = {'=', '+', '-', '*',
 					 '/', '(', ')', ',',
 					 '.', '$', '&', '#',
 					 ':', '?', ' ', '\0',
-                     '_', '\''
+					 '_', '\'', '\t'
 					 };
-int EndSymbSz = 18;
+int EndSymbSz = 19;
 
 const wchar_t *VARSYM = L"$";
 const wchar_t *OBJSYM = L"&";
@@ -41,7 +41,7 @@ TColor HlDirect, HlExpr, HlVarSym, HlObjSym, HlComment, HlBrace, HlEndl, HlFunc;
 
 static std::vector<ExprColor> ExpColors; //перелік динамічних лексем, очищується
 										 //перед кожною операцією підсвітки
-static std::vector<ExprColor> PreDefinedColors; //перелік попереднь визначених лексем
+static std::vector<ExprColor> PreDefinedColors; //перелік попередньо визначених лексем
 
 static std::vector<MarkedFragment> vecSelFragments; //вектор, куди додаються параметри фрагментів,
 													//які треба розфарбувати
@@ -64,6 +64,7 @@ bool IsEndSym(wchar_t symb)
 void InitExprColors(int theme_style)
 {
   ExpColors.clear();
+  PreDefinedColors.clear();
 
   if (theme_style == ESH_LIGHT_THEME) //світла тема
 	{
@@ -349,6 +350,8 @@ void FindLexeme(TRichEdit *src, int line_ind, const wchar_t *st_symb, const wcha
 					  }
 					else if (IsEndSym(text[i]))
 					  cl = i;
+					else if (i == text.Length())
+                      cl = i + 1;
 				  }
 
 				if (op && cl)
