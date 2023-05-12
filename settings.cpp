@@ -132,8 +132,7 @@ void __fastcall TIDESettings::SaveSettingsClick(TObject *Sender)
 	   SpacesForTabs = CountSpacesForTabs->Text.ToInt();
 	   InterpreterPath = ELIPath->Text;
 
-	   if (SyntaxHighlight)
-		 SendMessage(ELIExtIDEForm->Editor->Handle, WM_KEYUP, 0, NULL);
+	   SendMessage(ELIExtIDEForm->Editor->Handle, WM_KEYUP, 0, NULL);
 	 }
   catch (Exception &e)
 	 {

@@ -242,7 +242,6 @@ int __fastcall TELIExtIDEForm::ConnectELI()
 		}
 	  else if (eIface)
 		{
-          Log->Lines->Add("ELI_INTERFACE initialised");
 		  res = 0;
         }
 	  else if (!GetELI(&eIface))
@@ -251,10 +250,7 @@ int __fastcall TELIExtIDEForm::ConnectELI()
 		  res = -4;
 		}
 	  else
-		{
-		  Log->Lines->Add("ELI_INTERFACE initialised");
-		  res = 0;
-		}
+		res = 0;
 	}
   else
 	{
@@ -278,10 +274,7 @@ int __fastcall TELIExtIDEForm::ReleaseELI()
 		  res = -1;
 		}
 	  else
-		{
-		  Log->Lines->Add("ELI_INTERFACE released");
-		  res = 0;
-		}
+		res = 0;
 	}
 
   FreeLibrary(dllhandle);
@@ -465,7 +458,7 @@ void __fastcall TELIExtIDEForm::AutoScaleUI()
 
   if (MenuShowPanel->Checked)
 	{
-	  SetPanel(0, 0, 400, 24);
+	  SetPanel(0, 0, 450, 31);
 	  BtnPanel->Show();
 	  EditorTop = BtnPanel->ClientHeight;
 	}
@@ -1384,21 +1377,18 @@ void __fastcall TELIExtIDEForm::EditorKeyUp(TObject *Sender, WORD &Key, TShiftSt
 	  if (SyntaxHighlight)
         {
 		  LockWindowUpdate(Editor->Handle);
-
-		  if (SyntaxHighlight)
-			HighlightSource(Editor, Editor->CaretPos.Y - 1);
-
+		  HighlightSource(Editor, Editor->CaretPos.Y - 1);
 		  LockWindowUpdate(NULL);
 		}
 	}
   else if (Key == 0) //пустий символ для активації підсвітки
 	{
-	  LockWindowUpdate(Editor->Handle);
-
-	  if (SyntaxHighlight)
-		HighlightSourceFull(Editor);
-
-      LockWindowUpdate(NULL);
+      if (SyntaxHighlight)
+        {
+		  LockWindowUpdate(Editor->Handle);
+		  HighlightSourceFull(Editor);
+		  LockWindowUpdate(NULL);
+		}
 	}
   else if (AutoCodeInsight && (Key == 190)) //'.' для активації CodeInsight
     {
@@ -1629,7 +1619,7 @@ void __fastcall TELIExtIDEForm::MenuAboutClick(TObject *Sender)
   String text = "IDE version: " + GetVersionInString(Application->ExeName.c_str());
   text += "\r\nELI version: " + GetVersionInString(InterpreterPath.c_str());
 
-  text += "\r\n\r\nCopyright 2019-2020 Maxim Noltmeer (m.noltmeer@gmail.com)\r\n\r\n\
+  text += "\r\n\r\nCopyright 2019-2023 Maxim Noltmeer (m.noltmeer@gmail.com)\r\n\r\n\
 ELI IDE is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License\r\n\
 as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\r\n\
 ELI IDE is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty\r\n\

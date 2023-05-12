@@ -339,8 +339,20 @@
                 </DeployFile>
                 <DeployFile LocalName=".\Win32\Debug\ELIIDE.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName=".\Win32\Release\ELIIDE.exe" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\Win32\Release\ELIIDE.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>ELIIDE.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="TODO.txt" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="TODO.txt" Configuration="Release" Class="ProjectFile"/>
+                <DeployFile LocalName="TODO.txt" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="icos\logo.png" Configuration="Release" Class="UWP_CppLogo44"/>
                 <DeployFile LocalName="icos\logo_big.png" Configuration="Release" Class="UWP_CppLogo44">
                     <Platform Name="Win32">

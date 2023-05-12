@@ -27,9 +27,9 @@ This file is part of ELI IDE.
 USEFORM("sethost.cpp", SetHostAppForm);
 USEFORM("paramstack.cpp", ShowParamStackForm);
 USEFORM("objstack.cpp", ShowObjStackForm);
-USEFORM("main.cpp", ELIExtIDEForm);
-USEFORM("varstack.cpp", ShowVarStackForm);
 USEFORM("settings.cpp", IDESettings);
+USEFORM("varstack.cpp", ShowVarStackForm);
+USEFORM("main.cpp", ELIExtIDEForm);
 USEFORM("debug.cpp", DebugOutputForm);
 USEFORM("classstack.cpp", ShowClassStackForm);
 USEFORM("functionstack.cpp", ShowFuncStackForm);
