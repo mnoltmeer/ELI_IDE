@@ -130,6 +130,9 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <BCC_UseClassicCompiler>false</BCC_UseClassicCompiler>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
+        <Icon_MainIcon>et_Icon.ico</Icon_MainIcon>
+        <UWP_CppLogo44>..\icos\logo_big.png</UWP_CppLogo44>
+        <UWP_CppLogo150>..\icos\logo_big.png</UWP_CppLogo150>
     </PropertyGroup>
     <ItemGroup>
         <CppCompile Include="..\..\ELI\eli_script.cpp">
@@ -231,6 +234,13 @@
                 </DeployFile>
                 <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32c280mt.dll" Class="DependencyModule">
                     <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\icos\logo_big.png" Configuration="Release" Class="UWP_CppLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

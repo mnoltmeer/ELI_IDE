@@ -12,23 +12,21 @@ object SetHostAppForm: TSetHostAppForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 8
     Top = 37
-    Width = 228
+    Width = 253
     Height = 13
-    Caption = 'Note: host application must accept args list like:'
+    Caption = 'Note: host application must accept argument list like:'
   end
   object Label2: TLabel
     Left = 8
     Top = 56
     Width = 306
     Height = 13
-    Caption = '<ELI library path> <script path> <param list> <debug option>'
+    Caption = '<ELI library path> <script path> <param1;param2...;paramn>'
   end
   object Cancel: TBitBtn
     Left = 467

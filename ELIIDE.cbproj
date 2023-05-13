@@ -147,9 +147,9 @@
         <UsePackages>false</UsePackages>
         <DynamicRTL>false</DynamicRTL>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=IDE main application;FileVersion=1.0.0.5;InternalName=;LegalCopyright=2019-2023 Maxim Noltmeer m.noltmeer@gmail.com;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=ELI IDE;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=IDE main application;FileVersion=1.0.0.6;InternalName=;LegalCopyright=2019-2023 Maxim Noltmeer m.noltmeer@gmail.com;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=ELI IDE;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <Icon_MainIcon>ELIIDE_Icon1.ico</Icon_MainIcon>
-        <VerInfo_Build>5</VerInfo_Build>
+        <VerInfo_Build>6</VerInfo_Build>
         <UWP_CppLogo44>icos\logo_big.png</UWP_CppLogo44>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <UWP_CppLogo150>icos\logo_big.png</UWP_CppLogo150>
@@ -159,9 +159,10 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="..\ELI\eli_interface.h">
-            <BuildOrder>14</BuildOrder>
-        </None>
+        <CppCompile Include="..\ELI\eli_script.cpp">
+            <DependentOn>..\ELI\eli_script.h</DependentOn>
+            <BuildOrder>15</BuildOrder>
+        </CppCompile>
         <CppCompile Include="classstack.cpp">
             <Form>ShowClassStackForm</Form>
             <FormType>dfm</FormType>

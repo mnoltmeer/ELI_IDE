@@ -50,6 +50,7 @@ This file is part of ELI IDE.
 #include <Vcl.BaseImageCollection.hpp>
 #include <Vcl.ImageCollection.hpp>
 
+#include "..\ELI\eli_script.h"
 //---------------------------------------------------------------------------
 
 class TELIExtIDEForm : public TForm
@@ -193,6 +194,9 @@ private:	// User declarations
 	void __fastcall AddCloseBraces(String &text);
 	int __fastcall CountBraces(const String &text, wchar_t brace);
 	void __fastcall Translate(String text, String params);
+	void CreateDebugLog();
+	void ExportStacks(ELI_INTERFACE *iface);
+    void SendStackContent(TStringList *stack, HWND h);
 
 public:		// User declarations
 	__fastcall TELIExtIDEForm(TComponent* Owner);

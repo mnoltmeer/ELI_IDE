@@ -21,7 +21,6 @@ This file is part of ELI IDE.
 #pragma hdrstop
 
 #include "..\work-functions\MyFunc.h"
-#include "..\ELI\eli_interface.h"
 #include "ELISourceHighlighter.h"
 #include "ELICodeInsight.h"
 #include "debug.h"
@@ -119,6 +118,7 @@ __fastcall TELIExtIDEForm::TELIExtIDEForm(TComponent* Owner)
   MenuTranslate->Bitmap = Images->GetBitmap(13, 16, 16);
   MenuTranslateToCursor->Bitmap = Images->GetBitmap(12, 16, 16);
   MenuStopTranslate->Bitmap = Images->GetBitmap(14, 16, 16);
+  MenuSetHostApp->Bitmap = Images->GetBitmap(15, 16, 16);
   MenuNew->Bitmap = Images->GetBitmap(8, 16, 16);
   MenuLoad->Bitmap = Images->GetBitmap(9, 16, 16);
   MenuSave->Bitmap = Images->GetBitmap(10, 16, 16);
@@ -415,7 +415,7 @@ void __fastcall TELIExtIDEForm::PPCodeInsightMenuClick(TObject *Sender)
 	   if (lexem != "")
 		 Editor->Lines->Strings[Editor->CaretPos.Y] = lexem;
 
-       if (SyntaxHighlight)
+	   if (SyntaxHighlight)
 		 HighlightSource(Editor, Editor->CaretPos.Y);
 	 }
   catch (Exception &e)
@@ -1160,8 +1160,7 @@ void __fastcall TELIExtIDEForm::Translate(String text, String params)
 		 {
 		   String prm = "\"" + InterpreterPath + "\" \"" +
 						LogPath + "\\prepared.es\" " +
-						"\"" + params + "\" " +
-						String((int)MenuDebugTranslate->Checked);
+						"\"" + params;
 
 		   ShellExecute(NULL,
 						L"open",
@@ -1172,30 +1171,96 @@ void __fastcall TELIExtIDEForm::Translate(String text, String params)
 		 }
 	   else
 		 {
-		   String prm = "\"" + InterpreterPath + "\" \"" +
-						LogPath + "\\prepared.es\" " +
-						"\"" + params + "\" " +
-						String((int)MenuDebugTranslate->Checked) + " " +
-						String((int)Log->Handle) + " " +
-						String((int)DebugOutputForm->DebugLog->Handle) + " " +
-						String((int)ShowVarStackForm->Stack->Handle) + " " +
-						String((int)ShowObjStackForm->Stack->Handle) + " " +
-						String((int)ShowClassStackForm->Stack->Handle) + " " +
-						String((int)ShowParamStackForm->Stack->Handle) + " " +
-						String((int)ShowFuncStackForm->Stack->Handle);
+		   std::unique_ptr<ELIScript> script(new ELIScript(InterpreterPath));
 
-		   ShellExecute(NULL,
-						L"open",
-						String(ide_dir + "\\et.exe").c_str(),
-						prm.c_str(),
-						NULL,
-						SW_SHOWNORMAL);
+		   Log->Lines->Add("[Interpreter version: " + String(script->Interpreter->GetVersion()));
+		   Log->Lines->Add("");
+
+		   script->LoadFromFile(LogPath + "\\prepared.es");
+		   script->Params = params;
+		   script->SaveLogInFile = true;
+
+		   SaveToFile(LogPath + "\\translate.log", "");
+
+		   Log->Lines->Add("Translating...\r\n");
+
+		   bool success = script->Run();
+
+           CreateDebugLog();
+
+		   Log->Lines->Add(script->Interpreter->ShowInfoMessages());
+		   Log->Lines->Add("");
+
+		   if (success)
+			 Log->Lines->Add("[SUCCESS]");
+		   else
+			 Log->Lines->Add("[FAIL]");
+
+		   ExportStacks(script->Interpreter);
 		 }
 	 }
   catch (Exception &e)
 	 {
 	   SaveLogToUserFolder("IDE.log", "ELI", "Translate: " + e.ToString());
 	 }
+}
+//---------------------------------------------------------------------------
+
+void TELIExtIDEForm::SendStackContent(TStringList *stack, HWND h)
+{
+  try
+	 {
+	   SendMessage(h, WM_SETTEXT, sizeof(stack->Text.c_str()), (LPARAM)stack->Text.c_str());
+	 }
+  catch (Exception &e)
+	{
+	  SaveLogToUserFolder("IDE.log", "ELI", "SendStackContent:" + e.ToString());
+	}
+}
+//---------------------------------------------------------------------------
+
+void TELIExtIDEForm::ExportStacks(ELI_INTERFACE *iface)
+{
+  try
+	 {
+	   std::unique_ptr<TStringList> msg(new TStringList());
+
+	   StrToList(msg.get(), iface->ShowVarStack());
+	   SendStackContent(msg.get(), ShowVarStackForm->Stack->Handle);
+
+	   StrToList(msg.get(), iface->ShowObjStack());
+	   SendStackContent(msg.get(), ShowObjStackForm->Stack->Handle);
+
+	   StrToList(msg.get(), iface->ShowClassStack());
+	   SendStackContent(msg.get(), ShowClassStackForm->Stack->Handle);
+
+	   StrToList(msg.get(), iface->ShowParamStack());
+	   SendStackContent(msg.get(), ShowParamStackForm->Stack->Handle);
+
+	   StrToList(msg.get(), iface->ShowFuncStack());
+	   SendStackContent(msg.get(), ShowFuncStackForm->Stack->Handle);
+	 }
+  catch (Exception &e)
+	{
+	  SaveLogToUserFolder("IDE.log", "ELI", "ExportStacks:" + e.ToString());
+	}
+}
+//---------------------------------------------------------------------------
+
+void TELIExtIDEForm::CreateDebugLog()
+{
+  try
+	 {
+	   std::unique_ptr<TStringList> msg(new TStringList());
+
+	   msg->LoadFromFile(LogPath + "\\translate.log", TEncoding::UTF8);
+	   SendStackContent(msg.get(), DebugOutputForm->DebugLog->Handle);
+	   Log->Lines->Add(msg.get()->Text);
+	 }
+  catch (Exception &e)
+	{
+	  SaveLogToUserFolder("IDE.log", "ELI", "CreateDebugLog:" + e.ToString());
+	}
 }
 //---------------------------------------------------------------------------
 
@@ -1839,8 +1904,8 @@ void __fastcall TELIExtIDEForm::MenuInsertClassClick(TObject *Sender)
 				"#public method " + name + "($x){&$this.Prop1 = $x;}\r\n" +
 				"}";
 
-  Clipboard()->SetTextBuf(body.c_str());
-  Editor->PasteFromClipboard();
+  Editor->Lines->Strings[Editor->CaretPos.Y] =
+  Editor->Lines->Strings[Editor->CaretPos.Y].Insert(body, Editor->CaretPos.X + 1);
 
   if (SyntaxHighlight)
 	SendMessage(Editor->Handle, WM_KEYUP, 0, NULL);
@@ -1854,8 +1919,8 @@ void __fastcall TELIExtIDEForm::MenuInsertProcedureClick(TObject *Sender)
   String body = "#procedure " + name + "()\r\n" +
 				"{\r\n\r\n}";
 
-  Clipboard()->SetTextBuf(body.c_str());
-  Editor->PasteFromClipboard();
+  Editor->Lines->Strings[Editor->CaretPos.Y] =
+  Editor->Lines->Strings[Editor->CaretPos.Y].Insert(body, Editor->CaretPos.X + 1);
 
   if (SyntaxHighlight)
 	SendMessage(Editor->Handle, WM_KEYUP, 0, NULL);
@@ -1869,8 +1934,8 @@ void __fastcall TELIExtIDEForm::MenuInsertMakeCodeClick(TObject *Sender)
   String body = "#make " + name + "\r\n" +
 				"{\r\n\r\n}";
 
-  Clipboard()->SetTextBuf(body.c_str());
-  Editor->PasteFromClipboard();
+  Editor->Lines->Strings[Editor->CaretPos.Y] =
+  Editor->Lines->Strings[Editor->CaretPos.Y].Insert(body, Editor->CaretPos.X + 1);
 
   if (SyntaxHighlight)
 	SendMessage(Editor->Handle, WM_KEYUP, 0, NULL);
@@ -1891,8 +1956,8 @@ void __fastcall TELIExtIDEForm::MenuInsertForClick(TObject *Sender)
 
   body += "+" + val + ")\r\n{\r\n\r\n}";
 
-  Clipboard()->SetTextBuf(body.c_str());
-  Editor->PasteFromClipboard();
+  Editor->Lines->Strings[Editor->CaretPos.Y] =
+  Editor->Lines->Strings[Editor->CaretPos.Y].Insert(body, Editor->CaretPos.X + 1);
 
   if (SyntaxHighlight)
 	SendMessage(Editor->Handle, WM_KEYUP, 0, NULL);
@@ -1906,8 +1971,8 @@ void __fastcall TELIExtIDEForm::MenuInsertSelectClick(TObject *Sender)
   String body = "select (" + val + ")\r\n" +
 				"{\r\nwhen 0 then {}\r\n}";
 
-  Clipboard()->SetTextBuf(body.c_str());
-  Editor->PasteFromClipboard();
+  Editor->Lines->Strings[Editor->CaretPos.Y] =
+  Editor->Lines->Strings[Editor->CaretPos.Y].Insert(body, Editor->CaretPos.X + 1);
 
   if (SyntaxHighlight)
 	SendMessage(Editor->Handle, WM_KEYUP, 0, NULL);

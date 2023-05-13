@@ -32,93 +32,10 @@ This file is part of ELI IDE.
 #include "..\ELI\eli_script.h"
 #include "..\work-functions\MyFunc.h"
 
-bool debugging;
-int h_log, h_debug, h_varstack, h_objstack, h_clstack, h_prmstack, h_funcstack;
+int h_debug;
 wchar_t dll_path[4096], script_path[4096], params[4096];
 String LogPath;
 extern String UsedAppLogDir;
-
-//---------------------------------------------------------------------------
-
-void SendStackContent(TStringList *stack, HWND h)
-{
-  try
-	 {
-	   SendMessage(h, WM_SETTEXT, sizeof(stack->Text.c_str()), (LPARAM)stack->Text.c_str());
-	 }
-  catch (Exception &e)
-	{
-	  SaveLogToUserFolder("et.log", "ELI", "et::SendStackContent():" + e.ToString());
-	}
-}
-//---------------------------------------------------------------------------
-
-void ExportStacks(ELI_INTERFACE *iface)
-{
-  try
-	 {
-	   std::unique_ptr<TStringList> msg(new TStringList());
-
-	   if (h_varstack)
-		 {
-		   StrToList(msg.get(), iface->ShowVarStack());
-		   SendStackContent(msg.get(), (HWND)h_varstack);
-		 }
-
-	   if (h_objstack)
-		 {
-		   StrToList(msg.get(), iface->ShowObjStack());
-		   SendStackContent(msg.get(), (HWND)h_objstack);
-		 }
-
-	   if (h_clstack)
-		 {
-		   StrToList(msg.get(), iface->ShowClassStack());
-		   SendStackContent(msg.get(), (HWND)h_clstack);
-		 }
-
-	   if (h_prmstack)
-		 {
-		   StrToList(msg.get(), iface->ShowParamStack());
-		   SendStackContent(msg.get(), (HWND)h_prmstack);
-		 }
-
-	   if (h_funcstack)
-		 {
-		   StrToList(msg.get(), iface->ShowFuncStack());
-		   SendStackContent(msg.get(), (HWND)h_funcstack);
-		 }
-	 }
-  catch (Exception &e)
-	{
-	  SaveLogToUserFolder("et.log", "ELI", "et::ExportStacks():" + e.ToString());
-	}
-}
-//---------------------------------------------------------------------------
-
-void CreateTranslateLog(ELI_INTERFACE *iface)
-{
-  try
-	 {
-	   std::unique_ptr<TStringList> msg(new TStringList());
-
-	   if (h_log)
-		 {
-		   StrToList(msg.get(), iface->ShowInfoMessages());
-		   SendStackContent(msg.get(), (HWND)h_log);
-		 }
-
-	   if (h_debug)
-		 {
-		   msg->LoadFromFile(LogPath + "\\translate.log", TEncoding::UTF8);
-		   SendStackContent(msg.get(), (HWND)h_debug);
-		 }
-	 }
-  catch (Exception &e)
-	{
-	  SaveLogToUserFolder("et.log", "ELI", "et::CreateTranslateLog():" + e.ToString());
-	}
-}
 //---------------------------------------------------------------------------
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -141,15 +58,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					  << "et.exe" << std::endl
 					  << "\t<dll path> " << std::endl
 					  << "\t<script path> " << std::endl
-					  << "\t<params> " << std::endl
-					  << "\t<debugging flag> " << std::endl
-					  << "\t<log window handle> " << std::endl
-					  << "\t<debug window handle> " << std::endl
-					  << "\t<var stack window handle> " << std::endl
-					  << "\t<object stack window handle> " << std::endl
-					  << "\t<class stack window handle> " << std::endl
-					  << "\t<parameter stack window handle> " << std::endl
-					  << "\t<function stack window handle>" << std::endl
+					  << "\t<param1;param2...;paramn> " << std::endl
 					  << std::endl;
 
 		   return 0;
@@ -183,87 +92,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		   throw Exception("Can't initialise <params>");
 		 }
 
-       try
-		  {
-			if (argc >= 5)
-			  debugging = StrToInt(argv[4]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <debugging flag>");
-		 }
-
-       try
-		  {
-			if (argc >= 6)
-			  h_log = StrToInt(argv[5]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <log window handle>");
-		 }
-
-       try
-		  {
-			if (argc >= 7)
-			  h_debug = StrToInt(argv[6]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <debug window handle>");
-		 }
-
-       try
-		  {
-			if (argc >= 8)
-			  h_varstack = StrToInt(argv[7]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <var stack window handle>");
-		 }
-
-       try
-		  {
-			if (argc >= 9)
-			  h_objstack = StrToInt(argv[8]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <object stack window handle>");
-		 }
-
-	   try
-		  {
-			if (argc >= 10)
-			  h_clstack = StrToInt(argv[9]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <class stack window handle>");
-		 }
-
-
-       try
-		  {
-			if (argc >= 11)
-			  h_prmstack = StrToInt(argv[10]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <parameter stack window handle>");
-		 }
-
-	   try
-		  {
-			if (argc >= 12)
-			  h_funcstack = StrToInt(argv[11]);
-		  }
-	   catch (Exception &e)
-		 {
-		   throw Exception("Can't initialise <function stack window handle>");
-		 }
-
 	   std::unique_ptr<ELIScript> script(new ELIScript(dll_path));
 
        std::wcout << std::endl
@@ -275,33 +103,29 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	   script->LoadFromFile(script_path);
 	   script->Params = params;
-	   script->SaveLogInFile = debugging;
-
-       const wchar_t *result;
+	   script->SaveLogInFile = true;
 
 	   std::wcout << "Translating..." << std::endl << std::endl;
+
+	   SaveToFile(LogPath + "\\translate.log", "");
 
 	   res = script->Run();
 
 	   if (res == 0)
-		 {
-		   MessageBox(NULL, L"Translate: FAILED", L"Result", MB_ICONERROR | MB_OK);
-		   std::wcout << std::endl << script->Log.c_str();
-		   CreateTranslateLog(script->Interpreter);
-		   ExportStacks(script->Interpreter);
-		 }
+		 std::wcout << std::endl << "Translate: FAILED" << std::endl;
 	   else
-		 {
-		   String msg = "Translate: OK\r\nResult: " + String(result);
-		   MessageBox(NULL, msg.c_str(), L"Result", MB_ICONINFORMATION | MB_OK);
-		   std::wcout << std::endl << script->Log.c_str();
-		   CreateTranslateLog(script->Interpreter);
-		   ExportStacks(script->Interpreter);
-         }
+		 std::wcout << std::endl << "Translate: SUCCESS"  << std::endl << "Result: " << script->Result << std::endl;
+
+	   std::wcout << script->Log.c_str();
+
+	   std::unique_ptr<TStringList> msg(new TStringList());
+
+	   msg->LoadFromFile(LogPath + "\\translate.log", TEncoding::UTF8);
+	   std::wcout << std::endl << msg->Text.c_str();
 	 }
   catch (Exception &e)
 	 {
-	   SaveLogToUserFolder("et.log", "ELI", "et::main(): Initialisation error: " + e.ToString());
+	   SaveLogToUserFolder("et.log", "ELI", "Initialisation error: " + e.ToString());
 	   res = -1;
 	 }
 
