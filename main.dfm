@@ -1219,13 +1219,13 @@ object ELIExtIDEForm: TELIExtIDEForm
   end
   object OpenProject: TOpenDialog
     DefaultExt = 'es'
-    Filter = 'ELI scripts|*.es|any file|*.*'
+    Filter = 'ELI scripts|*.es|ELI headers|*.eh|any file|*.*'
     Left = 784
     Top = 8
   end
   object SaveProject: TSaveDialog
     DefaultExt = 'es'
-    Filter = 'ELI scripts|*.es|any file|*.*'
+    Filter = 'ELI scripts|*.es|ELI headers|*.eh|any file|*.*'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
     Left = 856
     Top = 8
