@@ -89,7 +89,7 @@ __fastcall TELIExtIDEForm::TELIExtIDEForm(TComponent* Owner)
 
   Caption = "ELI IDE " + Version + " - <new>";
 
-  LogPath = GetEnvironmentVariable("USERPROFILE") + "\\Documents\\ELI";
+  LogPath = GetEnvironmentVariable("USERPROFILE") + "\\ELI";
 
   if (!DirectoryExists(LogPath))
 	CreateDir(LogPath);
