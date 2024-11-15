@@ -44,7 +44,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
   try
 	 {
-	   LogPath = GetEnvironmentVariable("USERPROFILE") + "\\Documents\\ELI";
+	   LogPath = GetEnvironmentVariable("USERPROFILE") + "\\ELI";
 
        UsedAppLogDir = "ELI";
 
