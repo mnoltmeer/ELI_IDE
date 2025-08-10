@@ -9,7 +9,10 @@
         <Projects Include="ELITranslationUtility\et.cbproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\ELI\ELI.cbproj">
+        <Projects Include="..\ELI-v1\ELI-v1.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\ELI-v2\ELI-v2.cbproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -38,23 +41,32 @@
     <Target Name="et:Make">
         <MSBuild Projects="ELITranslationUtility\et.cbproj" Targets="Make"/>
     </Target>
-    <Target Name="ELI">
-        <MSBuild Projects="..\ELI\ELI.cbproj"/>
+    <Target Name="ELI-v1">
+        <MSBuild Projects="..\ELI-v1\ELI-v1.cbproj"/>
     </Target>
-    <Target Name="ELI:Clean">
-        <MSBuild Projects="..\ELI\ELI.cbproj" Targets="Clean"/>
+    <Target Name="ELI-v1:Clean">
+        <MSBuild Projects="..\ELI-v1\ELI-v1.cbproj" Targets="Clean"/>
     </Target>
-    <Target Name="ELI:Make">
-        <MSBuild Projects="..\ELI\ELI.cbproj" Targets="Make"/>
+    <Target Name="ELI-v1:Make">
+        <MSBuild Projects="..\ELI-v1\ELI-v1.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="ELI-v2">
+        <MSBuild Projects="..\ELI-v2\ELI-v2.cbproj"/>
+    </Target>
+    <Target Name="ELI-v2:Clean">
+        <MSBuild Projects="..\ELI-v2\ELI-v2.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ELI-v2:Make">
+        <MSBuild Projects="..\ELI-v2\ELI-v2.cbproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="ELIIDE;et;ELI"/>
+        <CallTarget Targets="ELIIDE;et;ELI-v1;ELI-v2"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ELIIDE:Clean;et:Clean;ELI:Clean"/>
+        <CallTarget Targets="ELIIDE:Clean;et:Clean;ELI-v1:Clean;ELI-v2:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ELIIDE:Make;et:Make;ELI:Make"/>
+        <CallTarget Targets="ELIIDE:Make;et:Make;ELI-v1:Make;ELI-v2:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

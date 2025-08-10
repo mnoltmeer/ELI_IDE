@@ -94,16 +94,16 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	   std::unique_ptr<ELIScript> script(new ELIScript(dll_path));
 
+	   script->LoadFromFile(script_path);
+	   script->Params = params;
+	   script->SaveLogInFile = true;
+
        std::wcout << std::endl
 				  << "[Interpreter version: "
 				  << script->Interpreter->GetVersion()
 				  << "]"
 				  << std::endl
 				  << std::endl;
-
-	   script->LoadFromFile(script_path);
-	   script->Params = params;
-	   script->SaveLogInFile = true;
 
 	   std::wcout << "Translating..." << std::endl << std::endl;
 
@@ -121,7 +121,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	   std::unique_ptr<TStringList> msg(new TStringList());
 
 	   msg->LoadFromFile(LogPath + "\\translate.log", TEncoding::UTF8);
-	   std::wcout << std::endl << msg->Text.c_str();
 	 }
   catch (Exception &e)
 	 {
